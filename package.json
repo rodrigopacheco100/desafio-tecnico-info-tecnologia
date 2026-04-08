@@ -14,5 +14,8 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.10"
+	},
+	"dependencies": {
+		"uuidv7": "^1.2.1"
 	}
 }
