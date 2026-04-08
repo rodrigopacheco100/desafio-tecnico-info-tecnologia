@@ -24,12 +24,11 @@ export class UserMapper {
     };
   }
 
-  static toUpdateOnDb(user: User): WithoutId<typeof users.$inferInsert> {
+  static toUpdateOnDb(user: User): WithoutId<TypedOmit<typeof users.$inferInsert, 'createdAt'>> {
     return {
       name: user.name,
       email: user.email,
       password: user.password,
-      createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
   }

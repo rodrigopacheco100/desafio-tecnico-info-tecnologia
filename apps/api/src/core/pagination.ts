@@ -5,5 +5,6 @@ export interface Pagination {
 
 export interface PaginationResult<T> {
   data: T[];
+  totalCount: number;
   amountOfPages: number;
 }

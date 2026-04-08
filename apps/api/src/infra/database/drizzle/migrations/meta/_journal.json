@@ -8,6 +8,13 @@
       "when": 1775670510030,
       "tag": "0000_create-user-table",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1775678450686,
+      "tag": "0001_create-vehicle-tables",
+      "breakpoints": true
     }
   ]
 }
