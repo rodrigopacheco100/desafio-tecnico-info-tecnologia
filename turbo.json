@@ -1,0 +1,32 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local"],
+  "globalEnv": ["NODE_ENV", "PORT"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"],
+      "cache": true
+    },
+    "start:dev": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true
+    },
+    "dev:api": {
+      "dependsOn": ["@info-tec/broker-contracts#build"],
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "cache": true
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "cache": true
+    },
+    "format": {
+      "cache": false
+    }
+  }
+}
