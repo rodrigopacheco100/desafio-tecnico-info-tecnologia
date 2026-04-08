@@ -22,19 +22,15 @@ services:
   api:
     build:
       context: .
-      dockerfile: apps/api/Dockerfile
-      target: development
+      dockerfile: apps/api/Dockerfile.dev
     container_name: info-tec-api
     ports:
       - "3000:3000"
     volumes:
       - .:/app
-      - /app/node_modules
-      - /app/apps/api/node_modules
-      - /app/packages/broker-contracts/node_modules
       - turbo-cache:/app/.turbo
     working_dir: /app
-    command: ["npm", "run", "dev:api"]
+    command: ["sh", "-c", "corepack pnpm exec turbo run build --filter=./packages/* && corepack pnpm --filter @info-tec/api run dev:api"]
     env_file:
       - ./apps/api/.env.local
     environment:
