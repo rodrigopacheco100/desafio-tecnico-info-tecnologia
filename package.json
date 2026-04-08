@@ -2,25 +2,18 @@
   "name": "info-tec",
   "version": "1.0.0",
   "private": true,
-  "packageManager": "npm@10.9.2",
-  "workspaces": [
-    "packages/*",
-    "apps/*"
-  ],
+  "packageManager": "pnpm@9.15.0",
   "scripts": {
-    "build": "npx turbo run build",
-    "build:packages": "npx turbo run build --filter=./packages/*",
-    "dev": "npx turbo run start:dev --parallel",
-    "dev:api": "npx turbo run dev:api",
-    "test": "npx turbo run test",
-    "lint": "npx turbo run lint",
-    "format": "npx turbo run format"
+    "build": "turbo run build",
+    "build:packages": "turbo run build --filter=./packages/*",
+    "dev": "turbo run start:dev --parallel",
+    "dev:api": "turbo run dev:api",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "format": "turbo run format"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.10",
     "turbo": "^2.9.5"
-  },
-  "dependencies": {
-    "uuidv7": "^1.2.1"
   }
 }
