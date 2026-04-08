@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule, UsersRepository } from './database/drizzle';
+import { DatabaseModule } from './database/database.module';
 import { EnvModule } from './env/env.module';
 
 @Module({
   imports: [DatabaseModule, EnvModule],
   controllers: [],
-  providers: [UsersRepository],
-  exports: [UsersRepository],
+  providers: [],
+  exports: [],
 })
 export class AppModule {}
