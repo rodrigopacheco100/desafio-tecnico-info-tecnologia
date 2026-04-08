@@ -25,4 +25,15 @@ export abstract class Entity<Props extends object> {
 
     return false;
   }
+
+  protected setProperty<K extends keyof Props>(key: K, value: Props[K]) {
+    if (this.props[key] === value) {
+      return;
+    }
+
+    this.props[key] = value;
+    if (Object.hasOwn(this.props, 'updatedAt')) {
+      (this.props as any).updatedAt = new Date();
+    }
+  }
 }

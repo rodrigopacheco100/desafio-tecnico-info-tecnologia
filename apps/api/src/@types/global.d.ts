@@ -38,8 +38,6 @@ declare global {
     export interface Request {
       user: {
         userId: string;
-        role: 'student' | 'teacher' | 'employee' | 'franchisee';
-        parentId: string;
       };
     }
   }

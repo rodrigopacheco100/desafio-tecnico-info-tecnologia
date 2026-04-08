@@ -10,6 +10,7 @@ export const envSchema = z.object({
   DATABASE_USER: z.string().default('postgres'),
   DATABASE_PASSWORD: z.string().default('postgres'),
   DATABASE_NAME: z.string().default('info_tec_dev'),
+  JWT_SECRET: z.string().default('jwt_secret'),
 });
 
 export type Env = z.infer<typeof envSchema>;
