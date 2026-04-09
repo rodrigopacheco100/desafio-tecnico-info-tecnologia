@@ -1,13 +1,27 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Controller, HttpCode, HttpStatus, Post, Body } from '@nestjs/common';
 import { AuthenticateUserUseCase } from '@/domain/use-cases/authenticate-user';
 import { Public } from '@/infra/auth/public.decorator';
 import { Either } from '@/core/either';
+import { z } from 'zod';
+import { createZodDto } from 'nestjs-zod';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-type SignInBody = {
-  email: string;
-  password: string;
-};
+const SignInSchema = z.object({
+  email: z.email(),
+  password: z.string(),
+});
 
+class SignInDto extends createZodDto(SignInSchema) {}
+
+const SignInResponseSchema = z.object({
+  accessToken: z.string(),
+});
+
+class SignInResponseDto extends createZodDto(SignInResponseSchema) {}
+
+type SignInResponse = z.infer<typeof SignInResponseSchema>;
+
+@ApiTags('Auth')
 @Controller('/sign-in')
 @Public()
 export class SignInController {
@@ -15,7 +29,9 @@ export class SignInController {
 
   @Post()
   @HttpCode(HttpStatus.OK)
-  async handle(@Body() body: SignInBody) {
+  @ApiOperation({ summary: 'Authenticate user' })
+  @ApiResponse({ status: 200, type: SignInResponseDto })
+  async handle(@Body() body: SignInDto): Promise<SignInResponse> {
     const result = await this.authenticateUserUseCase.execute({
       email: body.email,
       password: body.password,
