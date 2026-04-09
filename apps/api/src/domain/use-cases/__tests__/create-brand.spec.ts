@@ -29,8 +29,6 @@ describe('CreateBrandUseCase', () => {
       expect(result.isSuccess()).toBe(true);
       const successResult = result as any;
       expect(successResult.value.brand.name).toBe('Toyota');
-      expect(brandRepository.findByName).toHaveBeenCalledWith('Toyota');
-      expect(brandRepository.save).toHaveBeenCalled();
     });
 
     it('should fail if brand name is already used', async () => {

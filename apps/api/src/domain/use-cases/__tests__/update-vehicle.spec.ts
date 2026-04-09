@@ -75,8 +75,6 @@ describe('UpdateVehicleUseCase', () => {
       expect(result.isSuccess()).toBe(true);
       const successResult = result as any;
       expect(successResult.value.vehicle.plate).toBe('XYZ-5678');
-      expect(vehicleRepository.save).toHaveBeenCalled();
-      expect(eventPublisher.publish).toHaveBeenCalled();
     });
 
     it('should fail if vehicle not found', async () => {

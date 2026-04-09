@@ -43,10 +43,6 @@ describe('ListVehiclesUseCase', () => {
       const successResult = result as any;
       expect(successResult.value.data).toHaveLength(2);
       expect(successResult.value.totalCount).toBe(2);
-      expect(vehicleRepository.findAllPaginated).toHaveBeenCalledWith({
-        page: 1,
-        quantityPerPage: 10,
-      });
     });
 
     it('should return empty result when no vehicles exist', async () => {

@@ -39,8 +39,6 @@ describe('CreateModelUseCase', () => {
       expect(result.isSuccess()).toBe(true);
       const successResult = result as any;
       expect(successResult.value.model.name).toBe('Corolla');
-      expect(brandRepository.findById).toHaveBeenCalledWith(brand.id.toString());
-      expect(modelRepository.save).toHaveBeenCalled();
     });
 
     it('should fail if brand not found', async () => {

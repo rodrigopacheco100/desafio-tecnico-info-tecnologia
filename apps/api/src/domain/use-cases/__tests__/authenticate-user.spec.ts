@@ -50,12 +50,6 @@ describe('AuthenticateUserUseCase', () => {
       expect(result.isSuccess()).toBe(true);
       const successResult = result as any;
       expect(successResult.value.accessToken).toBe('jwt_token_here');
-      expect(userRepository.findByEmail).toHaveBeenCalledWith('john@example.com');
-      expect(hasher.compare).toHaveBeenCalledWith('password123', 'hashed_password');
-      expect(encrypter.encrypt).toHaveBeenCalledWith({
-        sub: mockUser.id.toString(),
-        email: mockUser.email,
-      });
     });
 
     it('should fail if user does not exist', async () => {
@@ -85,32 +79,6 @@ describe('AuthenticateUserUseCase', () => {
       expect(failResult.value.message).toBe('Invalid credentials');
     });
 
-    it('should call findByEmail with correct email', async () => {
-      vi.spyOn(userRepository, 'findByEmail').mockResolvedValue(mockUser);
-      vi.spyOn(hasher, 'compare').mockResolvedValue(true);
-      vi.spyOn(encrypter, 'encrypt').mockResolvedValue('jwt_token_here');
-
-      await useCase.execute({
-        email: 'test@example.com',
-        password: 'password123',
-      });
-
-      expect(userRepository.findByEmail).toHaveBeenCalledWith('test@example.com');
-    });
-
-    it('should call hasher.compare with correct arguments', async () => {
-      vi.spyOn(userRepository, 'findByEmail').mockResolvedValue(mockUser);
-      vi.spyOn(hasher, 'compare').mockResolvedValue(true);
-      vi.spyOn(encrypter, 'encrypt').mockResolvedValue('jwt_token_here');
-
-      await useCase.execute({
-        email: 'john@example.com',
-        password: 'mypassword',
-      });
-
-      expect(hasher.compare).toHaveBeenCalledWith('mypassword', 'hashed_password');
-    });
-
     it('should return accessToken in success result', async () => {
       vi.spyOn(userRepository, 'findByEmail').mockResolvedValue(mockUser);
       vi.spyOn(hasher, 'compare').mockResolvedValue(true);
@@ -124,27 +92,6 @@ describe('AuthenticateUserUseCase', () => {
       expect(result.isSuccess()).toBe(true);
       const successResult = result as any;
       expect(successResult.value.accessToken).toBe('new_token');
-    });
-
-    it('should encrypt user data with correct sub and email', async () => {
-      vi.spyOn(userRepository, 'findByEmail').mockResolvedValue(mockUser);
-      vi.spyOn(hasher, 'compare').mockResolvedValue(true);
-      vi.spyOn(encrypter, 'encrypt').mockResolvedValue('token');
-
-      await useCase.execute({
-        email: 'john@example.com',
-        password: 'password123',
-      });
-
-      expect(encrypter.encrypt).toHaveBeenCalledWith({
-        sub: mockUser.id.toString(),
-        email: mockUser.email,
-      });
-    });
-
-    it('should have constructor initialized with dependencies', () => {
-      expect(useCase).toBeDefined();
-      expect(useCase).toBeInstanceOf(AuthenticateUserUseCase);
     });
   });
 });

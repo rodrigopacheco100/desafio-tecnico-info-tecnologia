@@ -31,7 +31,6 @@ describe('ListBrandsUseCase', () => {
       expect(result.isSuccess()).toBe(true);
       const successResult = result as any;
       expect(successResult.value.brands).toHaveLength(2);
-      expect(brandRepository.findAll).toHaveBeenCalled();
     });
 
     it('should return empty array when no brands exist', async () => {

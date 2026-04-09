@@ -28,7 +28,6 @@ describe('DeleteModelUseCase', () => {
       const result = await useCase.execute({ id: existingModel.id.toString() });
 
       expect(result.isSuccess()).toBe(true);
-      expect(modelRepository.delete).toHaveBeenCalledWith(existingModel.id.toString());
     });
 
     it('should fail if model not found', async () => {

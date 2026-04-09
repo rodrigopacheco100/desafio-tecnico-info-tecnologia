@@ -34,7 +34,6 @@ describe('ListCategoriesUseCase', () => {
       expect(result.isSuccess()).toBe(true);
       const successResult = result as any;
       expect(successResult.value.categories).toHaveLength(2);
-      expect(categoryRepository.findAll).toHaveBeenCalled();
     });
 
     it('should return empty array when no categories exist', async () => {

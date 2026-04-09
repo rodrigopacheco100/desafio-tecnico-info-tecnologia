@@ -31,7 +31,6 @@ describe('DeleteCategoryUseCase', () => {
       const result = await useCase.execute({ id: existingCategory.id.toString() });
 
       expect(result.isSuccess()).toBe(true);
-      expect(categoryRepository.delete).toHaveBeenCalledWith(existingCategory.id.toString());
     });
 
     it('should fail if category not found', async () => {

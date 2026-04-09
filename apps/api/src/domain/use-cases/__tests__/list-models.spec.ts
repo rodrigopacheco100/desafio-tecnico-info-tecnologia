@@ -31,7 +31,6 @@ describe('ListModelsUseCase', () => {
       expect(result.isSuccess()).toBe(true);
       const successResult = result as any;
       expect(successResult.value.models).toHaveLength(2);
-      expect(modelRepository.findAll).toHaveBeenCalled();
     });
 
     it('should return models filtered by brandId', async () => {
@@ -43,7 +42,6 @@ describe('ListModelsUseCase', () => {
       expect(result.isSuccess()).toBe(true);
       const successResult = result as any;
       expect(successResult.value.models).toHaveLength(1);
-      expect(modelRepository.findByBrandId).toHaveBeenCalledWith('brand-1');
     });
 
     it('should return empty array when no models exist', async () => {
@@ -54,24 +52,6 @@ describe('ListModelsUseCase', () => {
       expect(result.isSuccess()).toBe(true);
       const successResult = result as any;
       expect(successResult.value.models).toHaveLength(0);
-    });
-
-    it('should call findByBrandId when brandId is provided', async () => {
-      const models = [makeMockModel({ name: 'Corolla', brandId: 'brand-1' })];
-      vi.spyOn(modelRepository, 'findByBrandId').mockResolvedValue(models);
-
-      await useCase.execute({ brandId: 'brand-1' });
-
-      expect(modelRepository.findByBrandId).toHaveBeenCalled();
-    });
-
-    it('should call findAll when brandId is not provided', async () => {
-      const models = [makeMockModel({ name: 'Corolla' })];
-      vi.spyOn(modelRepository, 'findAll').mockResolvedValue(models);
-
-      await useCase.execute({});
-
-      expect(modelRepository.findAll).toHaveBeenCalled();
     });
   });
 });

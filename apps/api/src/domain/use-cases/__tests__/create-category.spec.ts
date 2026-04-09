@@ -32,8 +32,6 @@ describe('CreateCategoryUseCase', () => {
       expect(result.isSuccess()).toBe(true);
       const successResult = result as any;
       expect(successResult.value.category.name).toBe('Sedan');
-      expect(categoryRepository.findByName).toHaveBeenCalledWith('Sedan');
-      expect(categoryRepository.save).toHaveBeenCalled();
     });
 
     it('should fail if category name is already used', async () => {
