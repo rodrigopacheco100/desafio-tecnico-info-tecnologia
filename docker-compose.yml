@@ -1,4 +1,24 @@
 services:
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: info-tec-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=info_tec
+      - RABBITMQ_DEFAULT_PASS=info_tec_secret
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - info-tec-network
+
   postgres:
     image: postgres:16
     container_name: info-tec-postgres
@@ -30,7 +50,7 @@ services:
       - .:/app
       - turbo-cache:/app/.turbo
     working_dir: /app
-    command: ["sh", "-c", "corepack pnpm exec turbo run build --filter=./packages/* && corepack pnpm --filter @info-tec/api run dev:api"]
+    command: ["sh", "-c", "pnpm exec turbo run build --filter=./packages/* && pnpm --filter @info-tec/api run dev:api"]
     env_file:
       - ./apps/api/.env.local
     environment:
@@ -38,6 +58,27 @@ services:
       - TURBO_TELEMETRY_DISABLED=1
     depends_on:
       postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - info-tec-network
+
+  consumer-service:
+    build:
+      context: .
+      dockerfile: apps/consumer-service/Dockerfile.dev
+    container_name: info-tec-consumer-service
+    volumes:
+      - .:/app
+    working_dir: /app/apps/consumer-service
+    command: ["pnpm", "run", "dev"]
+    env_file:
+      - ./apps/consumer-service/.env
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      rabbitmq:
         condition: service_healthy
     networks:
       - info-tec-network
@@ -49,3 +90,4 @@ networks:
 volumes:
   turbo-cache:
   postgres-data:
+  rabbitmq-data:

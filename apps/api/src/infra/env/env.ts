@@ -11,6 +11,9 @@ export const envSchema = z.object({
   DATABASE_PASSWORD: z.string().default('postgres'),
   DATABASE_NAME: z.string().default('info_tec_dev'),
   JWT_SECRET: z.string().default('jwt_secret'),
+  // RABBITMQ
+  RABBITMQ_URL: z.string().default('amqp://info_tec:info_tec_secret@localhost:5672'),
+  RABBITMQ_EXCHANGE: z.string().default('info_tec.events'),
 });
 
 export type Env = z.infer<typeof envSchema>;

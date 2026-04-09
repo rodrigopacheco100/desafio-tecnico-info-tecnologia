@@ -6,6 +6,7 @@ import { Vehicle } from '../entities/vehicle';
 import { VehicleRepository } from '../repositories/vehicle.repository';
 import { ModelRepository } from '../repositories/model.repository';
 import { CategoryRepository } from '../repositories/category.repository';
+import { EventPublisher } from '../services/event-publisher';
 
 type UpdateVehicleInput = {
   id: string;
@@ -27,6 +28,7 @@ export class UpdateVehicleUseCase implements UseCase {
     private readonly vehicleRepository: VehicleRepository,
     private readonly modelRepository: ModelRepository,
     private readonly categoryRepository: CategoryRepository,
+    private readonly eventPublisher: EventPublisher,
   ) {}
 
   async execute(input: UpdateVehicleInput) {
@@ -68,6 +70,20 @@ export class UpdateVehicleUseCase implements UseCase {
     vehicle.year = input.year;
 
     await this.vehicleRepository.save(vehicle);
+
+    await this.eventPublisher.publish({
+      routingKey: 'vehicle.updated',
+      payload: {
+        id: vehicle.id,
+        plate: vehicle.plate,
+        chassis: vehicle.chassis,
+        renavam: vehicle.renavam,
+        modelId: vehicle.modelId,
+        categoryId: vehicle.categoryId,
+        year: vehicle.year,
+        updatedAt: vehicle.updatedAt,
+      },
+    });
 
     return Either.success<UpdateVehicleOutput>({ vehicle });
   }

@@ -17,6 +17,7 @@
     "db:seed": "npx ts-node src/infra/database/drizzle/seed.ts"
   },
   "dependencies": {
+    "@golevelup/nestjs-rabbitmq": "^9.0.0",
     "@info-tec/broker-contracts": "*",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^4.0.3",
