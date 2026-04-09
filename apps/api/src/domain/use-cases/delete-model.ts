@@ -1,8 +1,8 @@
 import { UseCase } from '@/core/use-case';
 import { Either } from '@/core/either';
-import { AppError } from '@/core/app-error';
 import { Injectable } from '@nestjs/common';
 import { ModelRepository } from '../repositories/model.repository';
+import { ModelNotFoundError } from '../errors/model-not-found.error';
 
 type DeleteModelInput = {
   id: string;
@@ -18,7 +18,7 @@ export class DeleteModelUseCase implements UseCase {
     const model = await this.modelRepository.findById(input.id);
 
     if (!model) {
-      return Either.fail(new AppError('Model not found'));
+      return Either.fail(new ModelNotFoundError());
     }
 
     await this.modelRepository.delete(input.id);

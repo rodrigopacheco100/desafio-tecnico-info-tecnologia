@@ -1,9 +1,9 @@
 import { UseCase } from '@/core/use-case';
 import { Either } from '@/core/either';
-import { AppError } from '@/core/app-error';
 import { Injectable } from '@nestjs/common';
 import { VehicleRepository } from '../repositories/vehicle.repository';
 import { EventPublisher } from '../services/event-publisher';
+import { VehicleNotFoundError } from '../errors/vehicle-not-found.error';
 
 type DeleteVehicleInput = {
   id: string;
@@ -22,7 +22,7 @@ export class DeleteVehicleUseCase implements UseCase {
     const vehicle = await this.vehicleRepository.findById(input.id);
 
     if (!vehicle) {
-      return Either.fail(new AppError('Vehicle not found'));
+      return Either.fail(new VehicleNotFoundError());
     }
 
     await this.eventPublisher.publish({

@@ -1,9 +1,9 @@
 import { UseCase } from '@/core/use-case';
 import { Either } from '@/core/either';
-import { AppError } from '@/core/app-error';
 import { Injectable } from '@nestjs/common';
 import { Brand } from '../entities/brand';
 import { BrandRepository } from '../repositories/brand.repository';
+import { BrandNameAlreadyUsedError } from '../errors/brand-name-already-used.error';
 
 type CreateBrandInput = {
   name: string;
@@ -21,7 +21,7 @@ export class CreateBrandUseCase implements UseCase {
     const nameAlreadyUsed = await this.brandRepository.findByName(input.name);
 
     if (nameAlreadyUsed) {
-      return Either.fail(new AppError('Brand name already used'));
+      return Either.fail(new BrandNameAlreadyUsedError());
     }
 
     const brand = Brand.create({ name: input.name });

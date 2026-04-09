@@ -1,9 +1,9 @@
 import { UseCase } from '@/core/use-case';
 import { Either } from '@/core/either';
-import { AppError } from '@/core/app-error';
 import { Injectable } from '@nestjs/common';
 import { Category } from '../entities/category';
 import { CategoryRepository } from '../repositories/category.repository';
+import { CategoryNameAlreadyUsedError } from '../errors/category-name-already-used.error';
 
 type CreateCategoryInput = {
   name: string;
@@ -21,7 +21,7 @@ export class CreateCategoryUseCase implements UseCase {
     const nameAlreadyUsed = await this.categoryRepository.findByName(input.name);
 
     if (nameAlreadyUsed) {
-      return Either.fail(new AppError('Category name already used'));
+      return Either.fail(new CategoryNameAlreadyUsedError());
     }
 
     const category = Category.create({ name: input.name });

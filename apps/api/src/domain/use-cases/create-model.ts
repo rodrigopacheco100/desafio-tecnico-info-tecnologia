@@ -1,10 +1,11 @@
 import { UseCase } from '@/core/use-case';
 import { Either } from '@/core/either';
-import { AppError } from '@/core/app-error';
 import { Injectable } from '@nestjs/common';
 import { Model } from '../entities/model';
 import { ModelRepository } from '../repositories/model.repository';
 import { BrandRepository } from '../repositories/brand.repository';
+import { ModelBrandNotFoundError } from '../errors/model-brand-not-found.error';
+import { ModelNameAlreadyUsedError } from '../errors/model-name-already-used.error';
 
 type CreateModelInput = {
   name: string;
@@ -25,12 +26,12 @@ export class CreateModelUseCase implements UseCase {
   async execute(input: CreateModelInput) {
     const brand = await this.brandRepository.findById(input.brandId);
     if (!brand) {
-      return Either.fail(new AppError('Brand not found'));
+      return Either.fail(new ModelBrandNotFoundError());
     }
 
     const nameAlreadyUsed = await this.modelRepository.findByName(input.name);
     if (nameAlreadyUsed) {
-      return Either.fail(new AppError('Model name already used'));
+      return Either.fail(new ModelNameAlreadyUsedError());
     }
 
     const model = Model.create({ name: input.name, brandId: input.brandId });

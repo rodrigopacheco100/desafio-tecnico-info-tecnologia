@@ -1,12 +1,17 @@
 import { UseCase } from '@/core/use-case';
 import { Either } from '@/core/either';
-import { AppError } from '@/core/app-error';
 import { Injectable } from '@nestjs/common';
 import { Vehicle } from '../entities/vehicle';
 import { VehicleRepository } from '../repositories/vehicle.repository';
 import { ModelRepository } from '../repositories/model.repository';
 import { CategoryRepository } from '../repositories/category.repository';
 import { EventPublisher } from '../services/event-publisher';
+import { VehicleNotFoundError } from '../errors/vehicle-not-found.error';
+import { VehicleModelNotFoundError } from '../errors/vehicle-model-not-found.error';
+import { VehicleCategoryNotFoundError } from '../errors/vehicle-category-not-found.error';
+import { VehiclePlateAlreadyRegisteredError } from '../errors/vehicle-plate-already-registered.error';
+import { VehicleChassisAlreadyRegisteredError } from '../errors/vehicle-chassis-already-registered.error';
+import { VehicleRenavamAlreadyRegisteredError } from '../errors/vehicle-renavam-already-registered.error';
 
 type UpdateVehicleInput = {
   id: string;
@@ -34,32 +39,32 @@ export class UpdateVehicleUseCase implements UseCase {
   async execute(input: UpdateVehicleInput) {
     const vehicle = await this.vehicleRepository.findById(input.id);
     if (!vehicle) {
-      return Either.fail(new AppError('Vehicle not found'));
+      return Either.fail(new VehicleNotFoundError());
     }
 
     const model = await this.modelRepository.findById(input.modelId);
     if (!model) {
-      return Either.fail(new AppError('Model not found'));
+      return Either.fail(new VehicleModelNotFoundError());
     }
 
     const category = await this.categoryRepository.findById(input.categoryId);
     if (!category) {
-      return Either.fail(new AppError('Category not found'));
+      return Either.fail(new VehicleCategoryNotFoundError());
     }
 
     const plateAlreadyUsed = await this.vehicleRepository.findByPlate(input.plate);
     if (plateAlreadyUsed && plateAlreadyUsed.id !== input.id) {
-      return Either.fail(new AppError('Plate already registered'));
+      return Either.fail(new VehiclePlateAlreadyRegisteredError());
     }
 
     const chassisAlreadyUsed = await this.vehicleRepository.findByChassis(input.chassis);
     if (chassisAlreadyUsed && chassisAlreadyUsed.id !== input.id) {
-      return Either.fail(new AppError('Chassis already registered'));
+      return Either.fail(new VehicleChassisAlreadyRegisteredError());
     }
 
     const renavamAlreadyUsed = await this.vehicleRepository.findByRenavam(input.renavam);
     if (renavamAlreadyUsed && renavamAlreadyUsed.id !== input.id) {
-      return Either.fail(new AppError('Renavam already registered'));
+      return Either.fail(new VehicleRenavamAlreadyRegisteredError());
     }
 
     vehicle.plate = input.plate;

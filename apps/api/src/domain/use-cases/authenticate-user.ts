@@ -1,10 +1,10 @@
 import { UseCase } from '@/core/use-case';
 import { Either } from '@/core/either';
-import { AppError } from '@/core/app-error';
 import { Hasher } from '../services/cryptography/hasher';
 import { Encrypter } from '../services/cryptography/encrypter';
 import { UserRepository } from '../repositories/user.repository';
 import { Injectable } from '@nestjs/common';
+import { UserInvalidCredentialsError } from '../errors/user-invalid-credentials.error';
 
 type AuthenticateUserInput = {
   email: string;
@@ -27,13 +27,13 @@ export class AuthenticateUserUseCase implements UseCase {
     const user = await this.userRepository.findByEmail(input.email);
 
     if (!user) {
-      return Either.fail(new AppError('Invalid credentials'));
+      return Either.fail(new UserInvalidCredentialsError());
     }
 
     const isPasswordValid = await this.hasher.compare(input.password, user.password);
 
     if (!isPasswordValid) {
-      return Either.fail(new AppError('Invalid credentials'));
+      return Either.fail(new UserInvalidCredentialsError());
     }
 
     const accessToken = await this.encrypter.encrypt({

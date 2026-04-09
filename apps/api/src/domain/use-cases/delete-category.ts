@@ -1,8 +1,8 @@
 import { UseCase } from '@/core/use-case';
 import { Either } from '@/core/either';
-import { AppError } from '@/core/app-error';
 import { Injectable } from '@nestjs/common';
 import { CategoryRepository } from '../repositories/category.repository';
+import { CategoryNotFoundError } from '../errors/category-not-found.error';
 
 type DeleteCategoryInput = {
   id: string;
@@ -18,7 +18,7 @@ export class DeleteCategoryUseCase implements UseCase {
     const category = await this.categoryRepository.findById(input.id);
 
     if (!category) {
-      return Either.fail(new AppError('Category not found'));
+      return Either.fail(new CategoryNotFoundError());
     }
 
     await this.categoryRepository.delete(input.id);

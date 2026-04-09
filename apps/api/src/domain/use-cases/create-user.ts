@@ -3,8 +3,9 @@ import { User } from '../entities/user.entity';
 import { Hasher } from '../services/cryptography/hasher';
 import { UserRepository } from '../repositories/user.repository';
 import { Either } from '@/core/either';
-import { AppError } from '@/core/app-error';
 import { Injectable } from '@nestjs/common';
+import { UserEmailAlreadyUsedError } from '../errors/user-email-already-used.error';
+import { UserPasswordNotStrongEnoughError } from '../errors/user-password-not-strong-enough.error';
 
 type CreateUserInput = {
   name: string;
@@ -25,10 +26,10 @@ export class CreateUserUseCase implements UseCase {
   async execute(input: CreateUserInput) {
     const emailAlreadyUsed = await this.userRepository.findByEmail(input.email);
 
-    if (emailAlreadyUsed) return Either.fail(new AppError('Email already used'));
+    if (emailAlreadyUsed) return Either.fail(new UserEmailAlreadyUsedError());
 
     if (!this.isStrongPassword(input.password))
-      return Either.fail(new AppError('Password is not strong enough'));
+      return Either.fail(new UserPasswordNotStrongEnoughError());
 
     const hashedPassword = await this.hasher.hash(input.password);
     const user = User.create({

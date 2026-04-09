@@ -1,9 +1,10 @@
 import { UseCase } from '@/core/use-case';
 import { Either } from '@/core/either';
-import { AppError } from '@/core/app-error';
 import { Injectable } from '@nestjs/common';
 import { Category } from '../entities/category';
 import { CategoryRepository } from '../repositories/category.repository';
+import { CategoryNotFoundError } from '../errors/category-not-found.error';
+import { CategoryNameAlreadyUsedError } from '../errors/category-name-already-used.error';
 
 type UpdateCategoryInput = {
   id: string;
@@ -22,12 +23,12 @@ export class UpdateCategoryUseCase implements UseCase {
     const category = await this.categoryRepository.findById(input.id);
 
     if (!category) {
-      return Either.fail(new AppError('Category not found'));
+      return Either.fail(new CategoryNotFoundError());
     }
 
     const nameAlreadyUsed = await this.categoryRepository.findByName(input.name);
     if (nameAlreadyUsed && nameAlreadyUsed.id !== input.id) {
-      return Either.fail(new AppError('Category name already used'));
+      return Either.fail(new CategoryNameAlreadyUsedError());
     }
 
     category.name = input.name;
