@@ -1,4 +1,4 @@
-import { createId } from '@paralleldrive/cuid2';
+import { uuidv7 } from 'uuidv7';
 import { Entity } from './entity';
 
 interface TestProps {
@@ -33,14 +33,14 @@ describe(Entity.name, () => {
   });
 
   it('should be able to create an entity with a specific id', () => {
-    const id = createId();
+    const id = uuidv7();
     const entity = TestEntity.from({ foo: 'bar', bar: 1, id });
 
     expect(entity.id).toBe(id);
   });
 
   it('should be able to compare entities for equality', () => {
-    const id = createId();
+    const id = uuidv7();
     const entity1 = TestEntity.from({ foo: 'bar', bar: 1, id });
     const entity2 = TestEntity.from({ foo: 'baz', bar: 2, id });
     const entity3 = TestEntity.create({ foo: 'bar', bar: 1 });
