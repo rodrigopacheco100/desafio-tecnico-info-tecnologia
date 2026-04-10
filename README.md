@@ -26,3 +26,8 @@ docker compose up -d
 ```
 
 A API estará disponível em `http://localhost:3000`
+
+## Documentação da API
+
+- **Swagger UI**: http://localhost:3000/docs
+- **API Reference (Scalar)**: http://localhost:3000/reference

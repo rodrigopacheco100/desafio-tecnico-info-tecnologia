@@ -39,7 +39,7 @@ async function bootstrap() {
     include: [HttpModule],
   });
 
-  SwaggerModule.setup('api/docs', app, document);
+  SwaggerModule.setup('docs', app, document);
 
   const { apiReference } = await import('@scalar/nestjs-api-reference');
 
@@ -54,7 +54,7 @@ async function bootstrap() {
   });
 
   app.use(
-    '/api/reference',
+    '/reference',
     apiReference({
       url: '/openapi.json',
     }),
