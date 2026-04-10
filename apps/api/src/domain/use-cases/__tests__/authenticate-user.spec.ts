@@ -28,10 +28,10 @@ describe('AuthenticateUserUseCase', () => {
       ],
     }).compile();
 
-    useCase = new AuthenticateUserUseCase(mockUserRepository, mockHasher, mockEncrypter);
-    userRepository = mockUserRepository;
-    hasher = mockHasher;
-    encrypter = mockEncrypter;
+    useCase = module.get<AuthenticateUserUseCase>(AuthenticateUserUseCase);
+    userRepository = module.get<UserRepository>(UserRepository);
+    hasher = module.get<Hasher>(Hasher);
+    encrypter = module.get<Encrypter>(Encrypter);
 
     vi.clearAllMocks();
   });
