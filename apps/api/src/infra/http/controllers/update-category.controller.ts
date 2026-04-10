@@ -7,7 +7,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { IdParamDto } from '../dtos/shared.dtos';
 
 const UpdateCategorySchema = z.object({
-  name: z.string().min(1).max(255),
+  name: z.string().min(1).max(255).optional(),
 });
 
 class UpdateCategoryDto extends createZodDto(UpdateCategorySchema) {}

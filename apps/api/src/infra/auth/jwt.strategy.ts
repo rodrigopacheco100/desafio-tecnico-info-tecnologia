@@ -6,7 +6,8 @@ import { z } from 'zod';
 import { EnvService } from '../env/env.service';
 
 const tokenPayloadSchema = z.object({
-  userId: z.string(),
+  sub: z.string(),
+  email: z.string(),
 });
 
 export type UserPayload = z.infer<typeof tokenPayloadSchema>;
@@ -23,6 +24,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: UserPayload) {
-    return tokenPayloadSchema.parse(payload);
+    const data = tokenPayloadSchema.parse(payload);
+    return { userId: data.sub, email: data.email };
   }
 }

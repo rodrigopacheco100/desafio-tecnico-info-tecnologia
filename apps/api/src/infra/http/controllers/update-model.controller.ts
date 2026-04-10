@@ -7,8 +7,8 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { IdParamDto } from '../dtos/shared.dtos';
 
 const UpdateModelSchema = z.object({
-  name: z.string().min(1).max(255),
-  brandId: z.string().uuid(),
+  name: z.string().min(1).max(255).optional(),
+  brandId: z.string().uuid().optional(),
 });
 
 class UpdateModelDto extends createZodDto(UpdateModelSchema) {}

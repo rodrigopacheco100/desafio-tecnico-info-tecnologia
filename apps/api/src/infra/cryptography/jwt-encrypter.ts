@@ -17,9 +17,9 @@ export class JwtEncrypter implements Encrypter {
     }
   }
 
-  async encrypt(payload: Record<string, unknown>, options: EncryptOptions): Promise<string> {
+  async encrypt(payload: Record<string, unknown>, options?: EncryptOptions): Promise<string> {
     return await this.jwtService.signAsync(payload, {
-      expiresIn: options.expiresIn ?? EncryptOptions.defaults.expiresIn,
+      expiresIn: options?.expiresIn ?? EncryptOptions.defaults.expiresIn,
     });
   }
 }

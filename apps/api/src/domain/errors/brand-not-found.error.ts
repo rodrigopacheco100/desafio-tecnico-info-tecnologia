@@ -1,6 +1,6 @@
-import { AppError } from '@/core/app-error';
+import { BaseError } from '@/core/base-error';
 
-export class BrandNotFoundError extends AppError {
+export class BrandNotFoundError extends BaseError {
   name = 'BrandNotFoundError' as const;
   constructor() {
     super('Brand not found', 404);

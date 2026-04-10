@@ -1,5 +1,6 @@
 import { UseCase } from '@/core/use-case';
 import { Either } from '@/core/either';
+import { isUndefined } from '@/core/is-undefined';
 import { Injectable } from '@nestjs/common';
 import { Vehicle } from '../entities/vehicle';
 import { VehicleRepository } from '../repositories/vehicle.repository';
@@ -15,12 +16,12 @@ import { VehicleRenavamAlreadyRegisteredError } from '../errors/vehicle-renavam-
 
 type UpdateVehicleInput = {
   id: string;
-  plate: string;
-  chassis: string;
-  renavam: string;
-  modelId: string;
-  categoryId: string;
-  year: number;
+  plate?: string;
+  chassis?: string;
+  renavam?: string;
+  modelId?: string;
+  categoryId?: string;
+  year?: number;
 };
 
 type UpdateVehicleOutput = {
@@ -42,37 +43,49 @@ export class UpdateVehicleUseCase implements UseCase {
       return Either.fail(new VehicleNotFoundError());
     }
 
-    const model = await this.modelRepository.findById(input.modelId);
-    if (!model) {
-      return Either.fail(new VehicleModelNotFoundError());
+    if (!isUndefined(input.modelId)) {
+      const model = await this.modelRepository.findById(input.modelId);
+      if (!model) {
+        return Either.fail(new VehicleModelNotFoundError());
+      }
+      vehicle.modelId = input.modelId;
     }
 
-    const category = await this.categoryRepository.findById(input.categoryId);
-    if (!category) {
-      return Either.fail(new VehicleCategoryNotFoundError());
+    if (!isUndefined(input.categoryId)) {
+      const category = await this.categoryRepository.findById(input.categoryId);
+      if (!category) {
+        return Either.fail(new VehicleCategoryNotFoundError());
+      }
+      vehicle.categoryId = input.categoryId;
     }
 
-    const plateAlreadyUsed = await this.vehicleRepository.findByPlate(input.plate);
-    if (plateAlreadyUsed && plateAlreadyUsed.id !== input.id) {
-      return Either.fail(new VehiclePlateAlreadyRegisteredError());
+    if (!isUndefined(input.plate)) {
+      const plateAlreadyUsed = await this.vehicleRepository.findByPlate(input.plate);
+      if (plateAlreadyUsed && plateAlreadyUsed.id !== input.id) {
+        return Either.fail(new VehiclePlateAlreadyRegisteredError());
+      }
+      vehicle.plate = input.plate;
     }
 
-    const chassisAlreadyUsed = await this.vehicleRepository.findByChassis(input.chassis);
-    if (chassisAlreadyUsed && chassisAlreadyUsed.id !== input.id) {
-      return Either.fail(new VehicleChassisAlreadyRegisteredError());
+    if (!isUndefined(input.chassis)) {
+      const chassisAlreadyUsed = await this.vehicleRepository.findByChassis(input.chassis);
+      if (chassisAlreadyUsed && chassisAlreadyUsed.id !== input.id) {
+        return Either.fail(new VehicleChassisAlreadyRegisteredError());
+      }
+      vehicle.chassis = input.chassis;
     }
 
-    const renavamAlreadyUsed = await this.vehicleRepository.findByRenavam(input.renavam);
-    if (renavamAlreadyUsed && renavamAlreadyUsed.id !== input.id) {
-      return Either.fail(new VehicleRenavamAlreadyRegisteredError());
+    if (!isUndefined(input.renavam)) {
+      const renavamAlreadyUsed = await this.vehicleRepository.findByRenavam(input.renavam);
+      if (renavamAlreadyUsed && renavamAlreadyUsed.id !== input.id) {
+        return Either.fail(new VehicleRenavamAlreadyRegisteredError());
+      }
+      vehicle.renavam = input.renavam;
     }
 
-    vehicle.plate = input.plate;
-    vehicle.chassis = input.chassis;
-    vehicle.renavam = input.renavam;
-    vehicle.modelId = input.modelId;
-    vehicle.categoryId = input.categoryId;
-    vehicle.year = input.year;
+    if (!isUndefined(input.year)) {
+      vehicle.year = input.year;
+    }
 
     await this.vehicleRepository.save(vehicle);
 

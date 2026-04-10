@@ -1,5 +1,6 @@
 import { UseCase } from '@/core/use-case';
 import { Either } from '@/core/either';
+import { isUndefined } from '@/core/is-undefined';
 import { Injectable } from '@nestjs/common';
 import { Brand } from '../entities/brand';
 import { BrandRepository } from '../repositories/brand.repository';
@@ -8,7 +9,7 @@ import { BrandNameAlreadyUsedError } from '../errors/brand-name-already-used.err
 
 type UpdateBrandInput = {
   id: string;
-  name: string;
+  name?: string;
 };
 
 type UpdateBrandOutput = {
@@ -26,12 +27,15 @@ export class UpdateBrandUseCase implements UseCase {
       return Either.fail(new BrandNotFoundError());
     }
 
-    const nameAlreadyUsed = await this.brandRepository.findByName(input.name);
-    if (nameAlreadyUsed && nameAlreadyUsed.id !== input.id) {
-      return Either.fail(new BrandNameAlreadyUsedError());
+    if (!isUndefined(input.name)) {
+      const nameAlreadyUsed = await this.brandRepository.findByName(input.name);
+      if (nameAlreadyUsed && nameAlreadyUsed.id !== input.id) {
+        return Either.fail(new BrandNameAlreadyUsedError());
+      }
+
+      brand.name = input.name;
     }
 
-    brand.name = input.name;
     await this.brandRepository.save(brand);
 
     return Either.success<UpdateBrandOutput>({ brand });

@@ -7,16 +7,17 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { IdParamDto } from '../dtos/shared.dtos';
 
 const UpdateVehicleSchema = z.object({
-  plate: z.string().min(1).max(20),
-  chassis: z.string().min(1).max(50),
-  renavam: z.string().min(1).max(20),
-  modelId: z.string().uuid(),
-  categoryId: z.string().uuid(),
+  plate: z.string().min(1).max(20).optional(),
+  chassis: z.string().min(1).max(50).optional(),
+  renavam: z.string().min(1).max(20).optional(),
+  modelId: z.string().uuid().optional(),
+  categoryId: z.string().uuid().optional(),
   year: z
     .number()
     .int()
     .min(1900)
-    .max(new Date().getFullYear() + 1),
+    .max(new Date().getFullYear() + 1)
+    .optional(),
 });
 
 class UpdateVehicleDto extends createZodDto(UpdateVehicleSchema) {}

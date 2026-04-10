@@ -1,5 +1,6 @@
 import { UseCase } from '@/core/use-case';
 import { Either } from '@/core/either';
+import { isUndefined } from '@/core/is-undefined';
 import { Injectable } from '@nestjs/common';
 import { Model } from '../entities/model';
 import { ModelRepository } from '../repositories/model.repository';
@@ -10,8 +11,8 @@ import { ModelNameAlreadyUsedError } from '../errors/model-name-already-used.err
 
 type UpdateModelInput = {
   id: string;
-  name: string;
-  brandId: string;
+  name?: string;
+  brandId?: string;
 };
 
 type UpdateModelOutput = {
@@ -31,18 +32,22 @@ export class UpdateModelUseCase implements UseCase {
       return Either.fail(new ModelNotFoundError());
     }
 
-    const brand = await this.brandRepository.findById(input.brandId);
-    if (!brand) {
-      return Either.fail(new ModelBrandNotFoundError());
+    if (!isUndefined(input.brandId)) {
+      const brand = await this.brandRepository.findById(input.brandId);
+      if (!brand) {
+        return Either.fail(new ModelBrandNotFoundError());
+      }
+      model.brandId = input.brandId;
     }
 
-    const nameAlreadyUsed = await this.modelRepository.findByName(input.name);
-    if (nameAlreadyUsed && nameAlreadyUsed.id !== input.id) {
-      return Either.fail(new ModelNameAlreadyUsedError());
+    if (!isUndefined(input.name)) {
+      const nameAlreadyUsed = await this.modelRepository.findByName(input.name);
+      if (nameAlreadyUsed && nameAlreadyUsed.id !== input.id) {
+        return Either.fail(new ModelNameAlreadyUsedError());
+      }
+      model.name = input.name;
     }
 
-    model.name = input.name;
-    model.brandId = input.brandId;
     await this.modelRepository.save(model);
 
     return Either.success<UpdateModelOutput>({ model });
