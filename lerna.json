@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "version": "independent",
+  "packages": ["apps/*", "packages/*"],
+  "npmClient": "pnpm",
+  "command": {
+    "run": {
+      "stream": true
+    },
+    "publish": {
+      "ignoreChanges": ["*.md", "test/**", "**/__tests__/**"]
+    }
+  }
+}

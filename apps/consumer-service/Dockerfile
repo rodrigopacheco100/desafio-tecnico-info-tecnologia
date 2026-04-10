@@ -5,18 +5,15 @@ WORKDIR /app
 
 RUN corepack enable
 
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY package.json pnpm-workspace.yaml lerna.json pnpm-lock.yaml ./
 COPY apps/consumer-service/package.json ./apps/consumer-service/
 
-RUN pnpm install
+RUN corepack pnpm install --frozen-lockfile
 
-COPY apps/consumer-service/src ./apps/consumer-service/src
-COPY apps/consumer-service/tsconfig.json ./apps/consumer-service/
-COPY apps/consumer-service/nest-cli.json ./apps/consumer-service/
-COPY apps/consumer-service/biome.json ./apps/consumer-service/
+COPY . .
 
 WORKDIR /app/apps/consumer-service
-RUN pnpm run build
+RUN corepack pnpm run build
 
 FROM node:22.17.0-alpine AS production
 
@@ -24,7 +21,7 @@ WORKDIR /app
 
 RUN corepack enable
 
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY package.json pnpm-workspace.yaml lerna.json pnpm-lock.yaml ./
 COPY apps/consumer-service/package.json ./apps/consumer-service/
 
 RUN pnpm install --prod

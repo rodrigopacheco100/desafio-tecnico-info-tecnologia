@@ -48,14 +48,12 @@ services:
       - "3000:3000"
     volumes:
       - .:/app
-      - turbo-cache:/app/.turbo
     working_dir: /app
-    command: ["sh", "-c", "pnpm exec turbo run build --filter=./packages/* && pnpm --filter @info-tec/api run dev:api"]
+    command: ["sh", "-c", "pnpm run build:packages && pnpm --filter @info-tec/api run dev:api"]
     env_file:
       - ./apps/api/.env.local
     environment:
       - NODE_ENV=development
-      - TURBO_TELEMETRY_DISABLED=1
     depends_on:
       postgres:
         condition: service_healthy
@@ -88,6 +86,5 @@ networks:
     driver: bridge
 
 volumes:
-  turbo-cache:
   postgres-data:
   rabbitmq-data:

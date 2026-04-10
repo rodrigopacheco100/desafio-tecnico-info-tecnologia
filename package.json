@@ -3,17 +3,24 @@
   "version": "1.0.0",
   "private": true,
   "packageManager": "pnpm@9.15.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "build": "turbo run build",
-    "build:packages": "turbo run build --filter=./packages/*",
-    "dev": "turbo run start:dev --parallel",
-    "dev:api": "turbo run dev:api",
-    "test": "turbo run test",
-    "lint": "turbo run lint",
-    "format": "turbo run format"
+    "build": "lerna run build",
+    "build:api": "lerna run build --scope=@info-tec/api",
+    "build:consumer": "lerna run build --scope=@info-tec/consumer-service",
+    "build:packages": "lerna run build --scope=@info-tec/broker-contracts",
+    "dev": "lerna run start:dev --parallel",
+    "dev:api": "lerna run start:dev --scope=@info-tec/api",
+    "dev:consumer": "lerna run start:dev --scope=@info-tec/consumer-service",
+    "test": "lerna run test",
+    "lint": "lerna run lint",
+    "format": "lerna run format"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.10",
-    "turbo": "^2.9.5"
+    "lerna": "^9.0.7"
   }
 }

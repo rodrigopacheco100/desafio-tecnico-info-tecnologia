@@ -18,7 +18,10 @@ API REST para gestão de veículos, marcas, modelos e categorias, com autentica�
 ## Como Rodar
 
 ```bash
-# Iniciar todos os serviços (API, Consumer Service, PostgreSQL, RabbitMQ)
+# Instalar dependências
+pnpm install
+
+# Iniciar todos os serviços via Docker (API, Consumer Service, PostgreSQL, RabbitMQ)
 docker compose up -d
 ```
 

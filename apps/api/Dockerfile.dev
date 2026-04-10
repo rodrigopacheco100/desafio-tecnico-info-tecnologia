@@ -6,4 +6,4 @@ RUN corepack enable && apk add --no-cache wget
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "pnpm exec turbo run build --filter=./packages/* && pnpm --filter @info-tec/api run dev:api"]
+CMD ["sh", "-c", "pnpm run build:packages && pnpm --filter @info-tec/api run dev:api"]
