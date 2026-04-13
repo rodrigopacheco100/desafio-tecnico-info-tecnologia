@@ -7,9 +7,9 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { IdParamDto } from '../dtos/shared.dtos';
 
 const UpdateVehicleSchema = z.object({
-  plate: z.string().min(1).max(20).optional(),
-  chassis: z.string().min(1).max(50).optional(),
-  renavam: z.string().min(1).max(20).optional(),
+  plate: z.string().regex(/^[A-Z]{3}-[A-Z0-9]{4}$/).optional(),
+  chassis: z.string().regex(/^[A-Za-z0-9]{17}$/).optional(),
+  renavam: z.string().regex(/^[0-9]{11}$/).optional(),
   modelId: z.string().uuid().optional(),
   categoryId: z.string().uuid().optional(),
   year: z
@@ -25,9 +25,9 @@ class UpdateVehicleDto extends createZodDto(UpdateVehicleSchema) {}
 const VehicleResponseSchema = z.object({
   vehicle: z.object({
     id: z.string().uuid(),
-    plate: z.string(),
-    chassis: z.string(),
-    renavam: z.string(),
+    plate: z.string().regex(/^[A-Z]{3}-[A-Z0-9]{4}$/),
+    chassis: z.string().regex(/^[A-Za-z0-9]{17}$/),
+    renavam: z.string().regex(/^[0-9]{11}$/),
     modelId: z.string().uuid(),
     categoryId: z.string().uuid(),
     year: z.number().int(),

@@ -6,9 +6,9 @@ import { createZodDto } from 'nestjs-zod';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 const CreateVehicleSchema = z.object({
-  plate: z.string().min(1).max(20),
-  chassis: z.string().min(1).max(50),
-  renavam: z.string().min(1).max(20),
+  plate: z.string().regex(/^[A-Z]{3}-[A-Z0-9]{4}$/),
+  chassis: z.string().regex(/^[A-Za-z0-9]{17}$/),
+  renavam: z.string().regex(/^[0-9]{11}$/),
   modelId: z.string().uuid(),
   categoryId: z.string().uuid(),
   year: z
@@ -24,12 +24,12 @@ class CreateVehicleDto extends createZodDto(CreateVehicleSchema) {}
 const VehicleResponseSchema = z.object({
   vehicle: z.object({
     id: z.string().uuid(),
-    plate: z.string(),
-    chassis: z.string(),
-    renavam: z.string(),
+    plate: z.string().regex(/^[A-Z]{3}-[A-Z0-9]{4}$/),
+    chassis: z.string().regex(/^[A-Za-z0-9]{17}$/),
+    renavam: z.string().regex(/^[0-9]{11}$/),
     modelId: z.string().uuid(),
     categoryId: z.string().uuid(),
-    year: z.number().int().meta({ example: new Date().getFullYear() }),
+    year: z.number().int().min(1900).max(new Date().getFullYear() + 1).meta({ example: new Date().getFullYear() }),
     createdAt: z.string().datetime(),
     updatedAt: z.string().datetime(),
   }),
